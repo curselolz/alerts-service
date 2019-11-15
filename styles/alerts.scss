@@ -1,0 +1,179 @@
+@import "../../../common/styles/colors.scss";
+
+.breadcrumb {
+  background-color: transparent;
+}
+
+.wrapper-status {
+  display: flex;
+  align-items: center;
+
+  .dot {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    margin-right: 7px;
+  }
+
+  .new {
+    background-color: $alert-new-color;
+  }
+
+  .resolved {
+    background-color: $alert-resolved-color;
+  }
+
+  .declined {
+    background-color: $alert-declined-color;
+  }
+
+  .in-hand {
+    background-color: $alert-in-hand-color;
+  }
+}
+
+#open,
+#inProgress,
+#solved {
+  position: relative;
+  margin: 0;
+}
+
+table {
+  thead {
+    tr {
+      border-bottom: 0;
+      border-top: 0;
+
+      th {
+        border-bottom: 0;
+        border-top: 0;
+        cursor: pointer;
+      }
+    }
+  }
+
+  tbody {
+    td {
+      width:18%;
+    }
+    tr:nth-of-type(odd) {
+      background-color: #f4f6fa;
+    }
+  }
+}
+
+.sub-header-info-pane {
+  margin-left: 10px;
+}
+
+.ui.button {
+  color: white;
+
+  &:hover, &:focus, &:active {
+    color: white;
+  }
+  &.details-btn {
+    background-color: #141926;
+  }
+  &.in-hand-btn {
+    background-color: $alert-in-hand-color;
+  }
+  &.resolved-btn {
+    background-color: $alert-resolved-color;
+  }
+  &.declined-btn {
+    background-color: $alert-declined-color;
+  }
+}
+
+.search {
+  background-color: #f4f6fa;
+  padding: 0px 20px 2px 6px;
+  width:65%;
+}
+
+.page-item {
+  
+  .page-link {
+    color: grey;
+    border: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: grey;
+    }
+  }
+
+  &.active {
+    .page-link {
+      cursor: text;
+      background-color: grey;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+}
+
+
+.checkbox-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  input[type="checkbox"] {
+    opacity: 0;
+  }
+
+  input[type="checkbox"]+label::after {
+    content: none;
+  }
+
+  input[type="checkbox"]:checked+label::after {
+    content: "";
+  }
+
+  input[type="checkbox"]:focus+label::before {
+    outline: rgb(59, 153, 252) auto 5px;
+  }
+
+  label {
+    position: relative;
+    display: inline-block;
+    padding-top: 2px;
+    padding-left: 22px;
+
+    &:after,
+    &:before {
+      position: absolute;
+      content: "";
+
+      display: inline-block;
+
+    }
+
+    &:after {
+      height: 5px;
+      width: 9px;
+      border-left: 2px solid;
+      border-bottom: 2px solid;
+
+      transform: rotate(-45deg);
+
+      left: 4px;
+      top: 7px;
+    }
+
+    &:before {
+      height: 16px;
+      width: 16px;
+      background-color: #f4f6fa;
+
+      border: 1px solid #d1d9e8;
+      left: 0px;
+      top: 3px;
+    }
+  }
+}

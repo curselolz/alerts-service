@@ -1,0 +1,27 @@
+{
+  "name": "alerts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend-resolver.js",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.config.js --content-base ../../public/",
+    "start:ip": "npm run start -- --backend",
+    "build": "webpack --config webpack.config.js",
+    "watch": "npm run build -- --watch --progress || echo '\\033[0;31mBuild fail. Restart in 3 seconds\\033[0m' &&  sleep 3 && npm run watch"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "classnames": "^2.2.5",
+    "moment": "^2.24.0",
+    "react-date-range": "^0.9.4",
+    "react-paginate": "^6.3.0",
+    "react-redux": "^7.1.1",
+    "reactstrap": "^5.0.0",
+    "redux-logger": "^3.0.6",
+    "webpack": "4.19.1",
+    "webpack-dev-middleware": "^3.0.1",
+    "webpack-dev-server": "^3.1.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

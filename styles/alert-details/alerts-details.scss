@@ -1,0 +1,34 @@
+.details-row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.details-btn {
+    display: block;
+    text-align: center;
+    padding: 7px 0px;
+}
+
+.list {
+    padding:0;
+    list-style-type: none;
+}
+
+.cvo-no-img {
+  background: #d8d8d8;
+  cursor: default !important;
+    position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cvo-no-img-block {
+  width: 100%;
+  height: 100%;
+}
+
+.cvo-no-img-line {
+  stroke: rgb(184,184,184);
+  stroke-width: 1;
+}
