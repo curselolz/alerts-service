@@ -11,7 +11,7 @@ const AlertListDetails = ({alert}) => {
             </li>
             <li className="details-row">
                 <p>
-                    Name: {`${alert && alert.person.name} ${alert && alert.person.lastName}`}
+                    {alert && alert.person ? `Name: ${alert.person.name} ${alert.person.lastName}` : ''}
                 </p>
             </li>
             <li className="details-row">
@@ -32,22 +32,21 @@ const AlertListDetails = ({alert}) => {
             <li className="details-row">
                 <p>
                     Contact name: {
-                        alert && alert.manager.firstName !== undefined && alert.manager.firstName !== null ?
-                            `${alert.manager.firstName} ${alert.manager.lastName}` : ''
+                        alert && alert.manager ? alert.manager.firstName + ' ' + alert.manager.lastName : ''
                     }
                 </p>
             </li>
             <li className="details-row">
                 <p>
                     Contact manager email: {
-                        alert && alert.manager.email ? alert.manager.email : 'no email added yet'
+                        alert && alert.manager ? alert.manager.email : 'no email added yet'
                     }
                 </p>
             </li>
             <li className="details-row">
                 <p>
                     Contact manager phone: {
-                        alert && alert.manager.phone ? alert.manager.phone : 'no phone added yet'
+                        alert && alert.manager ? alert.manager.phone : 'no phone added yet'
                     }
                 </p>
             </li>

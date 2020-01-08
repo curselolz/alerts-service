@@ -7,127 +7,195 @@ import {
   Col,
 } from 'reactstrap';
 import moment from 'moment';
-import React, { PropTypes } from 'react'
+import { PureComponent, PropTypes } from 'react';
+import { omit } from 'lodash';
 
-const EscalationForm = ({
-  setForRule,
-  sendData,
-  users,
-  values,
-  fetchedRule,
-  setUserNotify,
-  selectedRule,
-}) => {
-  const time = [600000, 300000, 60000];
-  let newReceivers = fetchedRule && fetchedRule.receivers.map(el => el.replace(/,/g, ';'));
-  return (
-    <Form className="mb-5">
-      <FormGroup check>
-        <Label className="d-block" check>
+import '../../styles/alerts-escalation/alerts-escalation.scss';
+
+class EscalationForm extends PureComponent {
+
+  constructor(props) {
+    super(props);
+
+    let ruleFormValues = {
+      ...omit(props.rule, ['contactManager', 'receivers']),
+      contactManagerUid: props.rule.contactManager.uid,
+      receivers: props.rule.receivers.join('; '),
+    };
+
+    this.state = {
+      ruleFormValues
+    };
+  }
+
+  handleFieldChange = (e) => {
+    e.persist();
+    if (typeof this.state.ruleFormValues[e.target.name] === 'undefined') {
+      return;
+    }
+
+    this.setState(prevState => {
+      let ruleFormValues = Object.assign({}, prevState.ruleFormValues);
+      let { name, value } = e.target;
+      if (name === 'enabled' || name === 'usePhone') {
+        value = e.target.checked;
+      }
+      ruleFormValues[name] = value;
+      return { ruleFormValues };
+    });
+  }
+
+  render() {
+    let { rule, users, saveRule } = this.props;
+    let { ruleFormValues } = this.state;
+
+    return (
+      <Form className="mb-5 alert-escalation-form">
+        <FormGroup check>
+          <Label for={`enabled-${rule.uid}`} check>
+            <Input
+              defaultChecked={rule.enabled}
+              type="checkbox"
+              id={`enabled-${rule.uid}`}
+              name="enabled"
+              onChange={this.handleFieldChange}
+            />
+            Enable rule
+          </Label>
+        </FormGroup>
+        <FormGroup row>
+          <Label for={`alertStatus-${rule.uid}`} sm={2}>
+            Current status
+          </Label>
+          <Col sm={10}>
+            <Input
+              disabled
+              defaultValue={rule.alertStatus}
+              type="text"
+              id={`alertStatus-${rule.uid}`}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label for={`newAlertStatus-${rule.uid}`} sm={2}>
+            New status
+          </Label>
+          <Col sm={10}>
+            <Input
+              disabled
+              defaultValue={rule.newAlertStatus}
+              type="text"
+              id={`newAlertStatus-${rule.uid}`}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Label for={`period-${rule.uid}`}>Set escalation term </Label>
           <Input
-            checked={values.selectedRule === '' ? fetchedRule.enabled : values.enabled}
-            type="checkbox"
-            onChange={(e) => setForRule('enabled', e.target.checked)}
-          />
-          Enable rule
-        </Label>
-      </FormGroup>
-      <FormGroup row>
-        <Label for="currentStatus" sm={2}>
-          Current status
-        </Label>
-        <Col sm={10}>
+            type="select"
+            name="period"
+            id={`period-${rule.uid}`}
+            defaultValue={rule.period}
+            onChange={this.handleFieldChange}
+          >
+            <option value="60">1 minute</option>
+            <option value="300">5 minutes</option>
+            <option value="600">10 minutes</option>
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for={`template-${rule.uid}`}>
+            Mail template
+          </Label>
           <Input
-            disabled
-            defaultValue={fetchedRule.alertStatus}
-            type="text"
-            id="currentStatus"
+            defaultValue={rule.template}
+            type="textarea"
+            name="template"
+            id={`template-${rule.uid}`}
+            onChange={this.handleFieldChange}
           />
-        </Col>
-      </FormGroup>
-      <FormGroup row>
-        <Label for="newStatus" sm={2}>
-          New status
-        </Label>
-        <Col sm={10}>
+        </FormGroup>
+        <FormGroup check>
+          <Label for={`use-phone-${rule.uid}`} check>
+            <Input
+              defaultChecked={rule.usePhone}
+              type="checkbox"
+              id={`use-phone-${rule.uid}`}
+              name="usePhone"
+              onChange={this.handleFieldChange}
+            />
+            Phone
+          </Label>
+        </FormGroup>
+        {
+          ruleFormValues.usePhone ? (
+            <div>
+              <FormGroup>
+                <Label for={`phone-number-${rule.uid}`}>
+                  Phone number
+                </Label>
+                <Input
+                  type="tel"
+                  name="phoneNumber"
+                  id={`phone-number-${rule.uid}`}
+                  defaultValue={rule.phoneNumber}
+                  placeholder="Enter phone number"
+                  onChange={this.handleFieldChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for={`sms-template-${rule.uid}`}>
+                  SMS template
+                </Label>
+                <Input
+                  defaultValue={rule.smsTemplate}
+                  type="textarea"
+                  name="smsTemplate"
+                  id={`sms-template-${rule.uid}`}
+                  onChange={this.handleFieldChange}
+                />
+              </FormGroup>
+            </div>
+          ) : ''
+        }
+        <FormGroup>
+          <Label for={`contactManagerUid-${rule.uid}`}>Choose next-step manager</Label>
           <Input
-            disabled
-            defaultValue={fetchedRule.newAlertStatus}
-            type="text"
-            id="newStatus"
+            type="select"
+            name="contactManagerUid"
+            id={`contactManagerUid-${rule.uid}`}
+            defaultValue={rule.contactManager.uid}
+            onChange={this.handleFieldChange}
+          >
+            {users.map(u => {
+              return (<option key={u.uid} value={u.uid}>{u.firstName} {u.lastName}</option>)
+            })}
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for={`receivers-${rule.uid}`}>
+            Users to be notified
+          </Label>
+          <Input
+            type="email"
+            name="receivers"
+            id={`receivers-${rule.uid}`}
+            defaultValue={rule.receivers.join('; ')}
+            placeholder="Enter email user"
+            onChange={this.handleFieldChange}
           />
-        </Col>
-      </FormGroup>
-      <FormGroup>
-        <Label for="escalation-form">Set escalation term </Label>
-        <Input
-          type="select"
-          name="escalation-form"
-          id="escalation-form"
-          value={`${values.term}`}
-          onChange={(e) => setForRule('term', e.target.value)}
-            >
-          {time.map(el => <option
-            value={`${el / 1000}`}>
-            {moment(el).format('m')} minutes
-            </option>)
-          }
-        </Input>
-      </FormGroup>
-      <FormGroup>
-        <Label for="mail-template">
-          Mail template
-        </Label>
-        <Input
-          defaultValue={fetchedRule.template}
-          type="textarea"
-          name="mail-template"
-          id="mail-template"
-          onChange={(e) => setForRule('template', e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Label for="next-step-manager">Choose next-step manager</Label>
-        <Input
-          type="select"
-          name="next-step-manager"
-          id="next-step-manager"
-          onChange={(e) => setForRule('nextStepManager', e.target.value)}
-          value={`${values.nextStepManager}`}
-            >
-          {users && users.map(el => <option
-            value={`${el.uid}`}
-            >
-            {el.firstName + ' ' + el.lastName}
-          </option>
-          )}
-        </Input>
-      </FormGroup>
-      <FormGroup>
-        <Label for="notify-user">
-          Users to be notified
-        </Label>
-        <Input
-          type="email"
-          name="notify-user"
-          id="notify-user"
-          defaultValue={newReceivers}
-          placeholder="Enter email user"
-          onChange={(e) => setUserNotify(e.target.value)}
-        />
-        <Button className="mt-3" onClick={() => sendData(selectedRule)}>Save changes</Button>
-      </FormGroup>
-    </Form>
-  )
+        </FormGroup>
+        <Button className="mt-3" onClick={() => { saveRule(this.state.ruleFormValues) }}>Save changes</Button>
+      </Form>
+    );
+  }
 }
 
 
 EscalationForm.propTypes = {
-  setForRule: PropTypes.func.isRequired,
-  sendData: PropTypes.func.isRequired,
-  users:PropTypes.array.isRequired,
-  values: PropTypes.array.isRequired,
-  fetchedRule:PropTypes.object.isRequire,
+  saveRule: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
+  rule: PropTypes.object.isRequired,
 }
 
 export default EscalationForm;

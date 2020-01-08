@@ -4,8 +4,7 @@ import {
 } from '../constants';
 
 const initialState = {
-  fetchedRule:{},
-  allRules:[],
+  allRules: []
 };
 
 export default (state = initialState, action) => {

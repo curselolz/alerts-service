@@ -8,7 +8,8 @@ import {
   PATCH_ALERT,
   PATCH_ALERT_SUCCESS,
   PATCH_ALERT_ERROR,
-  API_ALERT,
+  CHANGE_MODAL_STATE,
+  API_ALERT
 } from '../constants';
 import { cvoFetch, jsonOrDie, getRequestOpts } from 'cvo-tools';
 
@@ -75,4 +76,8 @@ export const patchAlert = (uid, newStatus) => (dispatch) => {
   } else {
     dispatch({ type: PATCH_ALERT_ERROR, error });
   }
+}
+
+export const changeModalState = data => (dispatch) => {
+  dispatch({ type: CHANGE_MODAL_STATE, payload: data });
 }

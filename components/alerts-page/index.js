@@ -4,8 +4,10 @@ import { orderBy } from 'lodash';
 import { getAllAlerts } from '../../actions/';
 import { connect } from 'react-redux';
 import AlertsPageContainer from '../../containers/alerts-page';
+import { initTrackables } from '../../actions/init-application';
 import { getAlerts } from '../../selectors/alerts';
 import { AUDIO_LINK } from '../../constants';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/alerts.scss';
 
@@ -40,10 +42,15 @@ class AlertsPage extends Component {
     const { getAllAlerts } = this.props;
     getAllAlerts(this.state.startDate, this.state.endDate);
     this.timer = setInterval(() => getAllAlerts(this.state.startDate, this.state.endDate), 5000);
+    this.setState({ pageLoad: false });
+    initTrackables();
   }
+
 
   componentWillMount() {
     this.filterAlerts();
+    this.setState({ pageLoad: false });
+    this.props.initTrackables();
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -131,7 +138,7 @@ class AlertsPage extends Component {
     if (searchInput === "" || searchInput === null) {
       filteredAlerts = [...alerts];
     } else {
-      filteredAlerts = alerts.filter(el => el.person.name.toLowerCase().match(searchInput.toLowerCase()));
+      filteredAlerts = alerts.filter(el => `${el.person.name} ${el.person.lastName}`.toLowerCase().match(searchInput.toLowerCase()));
     }
     filteredAlerts = filteredAlerts.filter(el => statusCheckboxes[el.status]);
     await this.setState({ filteredAlerts: filteredAlerts });
@@ -205,4 +212,4 @@ AlertsPage.propTypes = {
 };
 
 export default connect(mapStateToProps,
-  { getAllAlerts,})(AlertsPage);
+  { getAllAlerts, initTrackables })(AlertsPage);

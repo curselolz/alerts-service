@@ -1,5 +1,5 @@
-import { Button } from 'components';
 import React, {PropTypes} from 'react';
+import { Button } from 'components';
 
 const AlertStatusButtonContainer = ({fetchedAlert, handleSetStatusButton}) => {
     let allowedButtons = [];
@@ -11,7 +11,7 @@ const AlertStatusButtonContainer = ({fetchedAlert, handleSetStatusButton}) => {
                 data-status="inHand"
                 onClick={(e) => handleSetStatusButton(e)}>
                     Take In Hand
-                </Button>);
+            </Button>);
         allowedButtons.push(
             <Button
                 key="declined"
@@ -19,7 +19,7 @@ const AlertStatusButtonContainer = ({fetchedAlert, handleSetStatusButton}) => {
                 data-status="declined"
                 onClick={(e) => handleSetStatusButton(e)}>
                     Decline
-                </Button>);
+            </Button>);
     } else if (fetchedAlert && fetchedAlert.status === 'inHand') {
         allowedButtons.push(
             <Button
@@ -28,11 +28,12 @@ const AlertStatusButtonContainer = ({fetchedAlert, handleSetStatusButton}) => {
                 data-status="resolved"
                 onClick={(e) => handleSetStatusButton(e)}>
                     Set Resolved
-                </Button>);
+            </Button>);
         allowedButtons.push(
-            <Button key="declined"
-            className="declined-btn"
-            data-status="declined"
+            <Button
+                key="declined"
+                className="declined-btn"
+                data-status="declined"
                 onClick={(e) => handleSetStatusButton(e)}>
                 Decline
             </Button>);

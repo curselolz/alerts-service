@@ -8,26 +8,32 @@ import '../../styles/alert-details/alerts-details.scss';
 import AlertsStatusButtons from '../../components/alerts-status-buttons';
 import { Button } from 'components';
 import { PropTypes } from 'react';
+import AlertsOnMap from '../../components/alert-show-on-map/container';
 
-const SubHeader = ({ alert, redirectToDashboard}) => {
+const SubHeader = ({ alert, openModal}) => {
     return (
         <div className="d-flex justify-content-end">
-            {alert && <AlertsStatusButtons fetchedAlert={alert}/>}
-            <Button onClick={redirectToDashboard}>Show on map</Button>
+            {alert && <AlertsStatusButtons fetchedAlert={alert} />}
+            <Button onClick={openModal} className="show-on-map-btn">Show on map</Button>
         </div>
     )
 }
 
-const AlertDetailsContainer = ({ alert, redirectToDashboard}) => {
+const AlertDetailsContainer = ({ modalState, alert, openModal }) => {
     return (
         <Layout
             breadcrumbs={<BreadCrumbs text="Alerts Details" />}
             subheaderControls={
                 <SubHeader
                     alert={alert}
-                    redirectToDashboard={redirectToDashboard}
-                />}
+                    openModal={openModal}
+                />
+            }
         >
+            <AlertsOnMap
+                modalState={modalState}
+                deviceNumber={alert && alert.person}
+            />
             <Container className="ml-0">
                 <Row>
                     <Col xs="6">
@@ -44,8 +50,7 @@ const AlertDetailsContainer = ({ alert, redirectToDashboard}) => {
 
 AlertDetailsContainer.propTypes = {
     alert:PropTypes.object.isRequired,
-    redirectToDashboard: PropTypes.func.isRequired,
-    redirectToEscalation: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
 };
 
 export default AlertDetailsContainer;

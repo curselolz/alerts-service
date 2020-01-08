@@ -11,14 +11,10 @@ import React, { PropTypes } from 'react'
 import EscalationForm from './form';
 
 const AlertEscalationContainer = ({
-  setForInHandRule,
-  setForNewRule,
-  sendData,
-  users,
-  values,
   newRule,
   inHandRule,
-  setUserNotify,
+  users,
+  saveRule,
 }) => {
   return (
     <Layout
@@ -29,40 +25,34 @@ const AlertEscalationContainer = ({
           <Col xs="12" sm="12">
             {
               newRule && inHandRule ? (
+
                 <div>
                   <h4>Rule for new</h4>
                   <EscalationForm
-                    sendData={sendData}
+                    rule={newRule}
                     users={users}
-                    values={values.newRule}
-                    setUserNotify={setUserNotify}
-                    fetchedRule={newRule}
-                    selectedRule={'new'}
-                    setForRule={setForNewRule}
+                    saveRule={saveRule}
                   />
+
                   <h4>Rule for in Hand</h4>
                   <EscalationForm
-                    sendData={sendData}
+                    rule={inHandRule}
                     users={users}
-                    values={values.inHandRule}
-                    setUserNotify={setUserNotify}
-                    fetchedRule={inHandRule}
-                    selectedRule={'inHand'}
-                    setForRule={setForInHandRule}
+                    saveRule={saveRule}
                   />
                 </div>
-              ) : <Form><p>no available rule</p></Form>
+
+              ) : <Form><p>no available rules</p></Form>
             }
           </Col>
         </Row>
       </Container>
     </Layout>
-  )
+  );
 }
 
 AlertEscalationContainer.propTypes = {
-  sendData:PropTypes.func.isRequired,
-  setForNewRule:PropTypes.func.isRequired,
+  saveRule: PropTypes.func.isRequired,
 }
 
 export default AlertEscalationContainer;

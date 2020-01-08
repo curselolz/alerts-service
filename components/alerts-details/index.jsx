@@ -2,12 +2,11 @@ import { PropTypes, PureComponent } from 'react';
 import { getAlert } from '../../actions/alerts';
 import { connect } from 'react-redux';
 import AlertDetailsContainer from '../../containers/alerts-details';
+import { changeModalState } from '../../actions/alerts';
 
 class AlertDetails extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-    }
   }
 
   componentWillMount() {
@@ -20,17 +19,19 @@ class AlertDetails extends PureComponent {
     getAlert(params.id);
   }
 
-  redirectToDashboard = () => {
-    location.assign('/')
+  openModal = () => {
+    const { changeModalState } = this.props;
+    changeModalState(true);
   }
 
   render ( ) {
     const alert = this.props.fetchedAlert;
+    const { fetchedAlert } = this.props;
     return (
-      <AlertDetailsContainer
-        alert={alert}
-        redirectToDashboard={this.redirectToDashboard}
-      />
+        <AlertDetailsContainer
+          alert={fetchedAlert ? fetchedAlert : {}}
+          openModal={this.openModal}
+        />
     )
   }
 }
@@ -45,4 +46,4 @@ AlertDetails.propTypes = {
 };
 
 export default connect(mapStateToProps,
-  { getAlert })(AlertDetails);
+  { getAlert, changeModalState })(AlertDetails);

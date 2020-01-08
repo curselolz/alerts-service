@@ -2,7 +2,7 @@ import { PropTypes } from 'react';
 
 const AlertDetailImage = ({alert}) => {
     return (
-        alert && alert.person.picture ? (
+        alert && alert.person ? (
             <img className="card-img-top" src={alert.person.picture} />
         ) : (
                 <div className="cvo-no-img">
